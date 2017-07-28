@@ -10,9 +10,6 @@
 (defn error-handler [{:keys [status status-text]}]
   (.log js/console (str "something bad happened: " status " " status-text)))
 
-
-(defonce keydat (atom {}))
-
 (defonce channels (atom []))
 (defonce msgs (atom []))
 
@@ -27,12 +24,6 @@
         :keywords? true
         :error-handler error-handler
         :handler (fn [r] (reset! msgs r))}))
-
-(defn channel [c]
-  [:li
-   [:span (str c)]
-   [:button {:on-click #(messages-load c)}
-    "Delete"]])
 
 (defn message [m]
   [:li {:class "left clearfix"}
@@ -51,22 +42,29 @@
 (defn messages [ms]
   [:div {:class "container"}
       [:div {:class "row"}
-          [:div {:class "col-md-12"}
+          [:div {:class "col-md-14"}
               [:div {:class "panel-collapse" :id "collapseOne"}
                   [:div {:class "panel-body"}
                       [:ul {:class "chat"}
                         (for [msg ms]
                           [message msg])]]]]]])
 
+(defn channel [c]
+       [:li {:class "sidebar-brand"}
+            [:a {:href "#" :on-click #(messages-load c)}
+                (str c)]])
 
+(defn channel-list []
+       [:ul {:class "sidebar-nav"}
+            (for [c @channels]
+                 [channel c])])
 
 (defn home-page []
-  [:div
-   [:h2 "Available Channels:"]
-   [:div
-     (for [c @channels]
-      [channel c])]
-   [messages @msgs]])
+  [:div#wrapper {:class "toggled"}
+                [:div#sidebar-wrapper
+                  [channel-list]]
+                [:div#page-content-wrapper
+                  [messages @msgs]]])
    ;[:div [:a {:href "/poo"} "go to about page"]]])
 
 (defn about-page []
