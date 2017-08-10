@@ -1,7 +1,7 @@
 (ns engn-web.channels
   (:gen-class))
 
-(def channels (atom {}))
+(def channels (atom {:default []}))
 
 (defn add-msg
   "Expects to receive a map of channels of the form:
@@ -25,7 +25,7 @@
 (defn channel-get!
   "Returns the messages in the channel. The default limit is the last
    10 messages, unless the :limit key is set to a different value."
-  [channel & {:keys [limit] :or {limit 10}}]
+  [channel & {:keys [limit] :or {limit 500}}]
  (take limit (or (get @channels channel) '())))
 
 (defn channel-list "Returns a list of the available channels" [] (keys @channels))

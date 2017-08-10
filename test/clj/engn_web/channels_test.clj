@@ -35,7 +35,7 @@
       (is (= [] (channel-get! :c)))
       (is (= [3 2] (channel-get! :a :limit 2)))
       (is (= [] (channel-get! :a :limit 0)))
-      (is (= 10 (count (channel-get! :d))))
+      (is (= 10 (count (channel-get! :d :limit 10))))
       (is (= 50 (count (channel-get! :d :limit 50))))
       (is (= 100 (count (channel-get! :d :limit 101))))
       (is (= 100 (count (channel-get! :d :limit 100)))))))

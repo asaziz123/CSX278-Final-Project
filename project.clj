@@ -17,8 +17,10 @@
                   :scope "provided"]
                  [secretary "1.2.3"]
                  [cljs-ajax "0.6.0"]
+                 [com.andrewmcveigh/cljs-time "0.5.0"]
                  [venantius/accountant "0.2.0"
-                  :exclusions [org.clojure/tools.reader]]]
+                  :exclusions [org.clojure/tools.reader]]
+                 [auth0-ring "0.1.0"]]
 
   :plugins [[lein-environ "1.0.2"]
             [lein-cljsbuild "1.1.5"]
