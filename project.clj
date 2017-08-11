@@ -18,6 +18,7 @@
                  [secretary "1.2.3"]
                  [cljs-ajax "0.6.0"]
                  [com.andrewmcveigh/cljs-time "0.5.0"]
+                 [reagent-material-ui "0.2.4"]
                  [venantius/accountant "0.2.0"
                   :exclusions [org.clojure/tools.reader]]
                  [auth0-ring "0.1.0"]]

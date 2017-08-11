@@ -24,10 +24,10 @@
    [:meta {:charset "utf-8"}]
    [:meta {:name "viewport"
            :content "width=device-width, initial-scale=1"}]
-   (include-css (if (env :dev) "/css/site.css" "/css/site.min.css"))
    (include-css "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css")
    (include-css "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css")
    (include-css "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
+   (include-css (if (env :dev) "/css/site.css" "/css/site.min.css"))
    (if-not (nil? user)
      [:script
       (str "var user = {name:\"" (:name user) "\",nickname:\"" (:nickname user) "\"}")])])
@@ -59,6 +59,7 @@
       {:msg msg :time time :user user}))
 
 (defn channel-add! [id msg-data user-obj]
+   (println "Add msg:" msg-data)
    (let [msg (msg-create msg-data user-obj)]
     (json (channels/channel-add! id msg))))
 

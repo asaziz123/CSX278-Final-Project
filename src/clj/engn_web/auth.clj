@@ -78,6 +78,7 @@
       (if logged-in (handler req) (ring.util.response/redirect "/login"))))))
 
 (defn get-user [request]
+  (println request)
   (let [user (clojure.walk/keywordize-keys (into {} (:user request)))]
     user))
 
