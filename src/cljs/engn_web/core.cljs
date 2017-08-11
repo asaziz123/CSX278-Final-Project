@@ -21,6 +21,7 @@
 (defonce msgs (atom []))
 (defonce msg-entry (atom ""))
 (defonce current-channel (atom ""))
+(defonce scroll-msgs (atom false))
 
 (defonce user (js->clj js/user :keywordize-keys true))
 
@@ -44,7 +45,6 @@
   (conj (seq msgs) msg))
 
 (defn messages-add! [channel msg]
-  (log "add msg")
   (POST (str "/channel/" channel)
        {:params {:msg msg}
         :response-format :json
@@ -54,68 +54,16 @@
         :handler (fn [r] (log "msg posted to server"))})
   (swap! msgs push {:msg msg
                     :user user
-                    :time (time-coerce/to-long (time/now))}))
+                    :time (time-coerce/to-long (time/now))})
+  (.setTimeout js/window #(.scrollTo js/window 0 (+ 0 (.-scrollHeight (.-body js/document)))) 250))
 
 (defn add-msg! []
   (messages-add! @current-channel @msg-entry)
   (reset! msg-entry ""))
 
 
-;; Auto-scrolling ==============================================================
-
-(defn scroll! [el start end time]
-  (log "Scroll " el " from " start " to " end)
-  (set! (.-scrollTop el) end))
-  ;(.play (goog.fx.dom.Scroll. el (clj->js start) (clj->js end) time)))
-
-(defn scrolled-to-end? [el tolerance]
-  ;; at-end?: element.scrollHeight - element.scrollTop === element.clientHeight
-  (> tolerance (- (.-scrollHeight el) (.-scrollTop el) (.-clientHeight el))))
-
-(defn autoscroll-list [opts & children]
-  (log "Children " children)
-  (let [;{:keys [class style scroll?] :as opts}
-        scroll? true
-        class "foo"
-        style {}
-        ;opts {}
-        should-scroll (reagent/atom true)]
-    (reagent/create-class
-     {:display-name "autoscroll-list"
-      :component-did-mount
-      (fn [this]
-        (let [n (reagent/dom-node this)]
-          (scroll! n [0 (.-scrollTop n)] [0 (.-scrollHeight n)] 0)))
-      :component-will-update
-      (fn [this]
-        (let [n (reagent/dom-node this)]
-          ;; (pp/pprint {:scrollheight (.-scrollHeight n)
-          ;;             :scrolltop    (.-scrollTop n)
-          ;;             :clientHeight (.-clientHeight n)
-          ;;             :to-scroll    (- (.-scrollHeight n) (.-scrollTop n))
-          ;;             :scrolled     [(- (.-scrollHeight n) (.-scrollTop n)) (.-clientHeight n)]})
-          (reset! should-scroll (scrolled-to-end? n 100))))
-      :component-did-update
-      (fn [this]
-        (let [scroll? (:scroll? (reagent/props this))
-              n       (reagent/dom-node this)]
-          (when (and scroll? @should-scroll)
-            (scroll! n [0 (.-scrollTop n)] [0 (.-scrollHeight n)] 600))))
-      :reagent-render
-      ;; When getting next and prev props here it would be possible to detect if children have changed
-      ;; and to disable scrollbars for the duration of the scroll animation
-      (fn [{:keys [children]}]
-        (log "Child count: " (count children))
-        (into [:div#message-scroller {:style style}] children))})))
-
-
-
-
 ;; -------------------------
 ;; Views
-
-
-
 
 (defn message [m]
   (let [name (:nickname (:user m))
@@ -125,15 +73,14 @@
       [ui/Card
        [ui/CardHeader {:title name
                        :subtitle formatted-time
-                       :avatar "http://placehold.it/50/55C1E7/fff&text=U"
+                       :avatar "https://s.gravatar.com/avatar/a9edda10d0e6fb75561f057d167a9077?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fju.png";"http://placehold.it/50/55C1E7/fff&text=U"
                        :actAsExpander true
-                       :showExpandableButton true}]
+                       :showExpandableButton false}]
        [ui/CardText text]]))
 
 (defn messages [ms]
-  [autoscroll-list {:scroll? true :style {} :class ""}
-   (for [msg ms]
-     [message msg])])
+    (for [msg ms]
+      ^{:key msg} [message msg]))
 
 (defn channel [c]
   [ui/ListItem {:primaryText (str "#" c) :onTouchTap #(open-channel c)}])
@@ -142,24 +89,6 @@
   [ui/List
     (for [c @channels]
          [channel c])])
-
-; (defn home-page []
-;   [:div
-;    [:div#wrapper {:class "toggled"}
-;                  [:div#sidebar-wrapper
-;                    [channel-list]]
-;                  [:div#page-content-wrapper
-;                    [messages (reverse @msgs)]]
-;                  [:label {:class "sr-only" :for "inlineFormInputGroup"}]
-;                  [:div {:class "input-group input-group-lg mb-2 mr-sm-2 mb-sm-0"}
-;                        [:div {:class "input-group-addon"
-;                               :on-click #(add-msg!)}
-;                              "+"]
-;                        [:input {:type "text"
-;                                 :class "form-control form-control-lg"
-;                                 :id "inlineFormInputGroup"
-;                                 :value @msg-entry
-;                                 :on-change #(reset! msg-entry (-> % .-target .-value))}]]]])
 
 (defn icon [nme] [ui/FontIcon {:className "material-icons"} nme])
 (defn color [nme] (aget ui/colors nme))
@@ -176,9 +105,9 @@
   (let [is-open? (atom false)
         close #(reset! is-open? false)]
     (fn []
-      [:div
+      [:div#header
        [ui/AppBar {:title "yipgo" :onLeftIconButtonTouchTap #(reset! is-open? true)}]
-       [ui/Drawer {:open @is-open? :docked false}
+       [ui/Drawer {:open @is-open? :docked true}
         [ui/List
          [ui/ListItem {:on-click (fn []
                                    (accountant/navigate! "/")

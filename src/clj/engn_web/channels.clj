@@ -1,18 +1,8 @@
 (ns engn-web.channels
   (:gen-class))
 
-(def channels (atom {"default"
-                     [{:msg "asdf" :time 0 :user {:name "Bob" :nickname "Ray"}}
-                      {:msg "asdf" :time 0 :user {:name "Bob" :nickname "Ray"}}
-                      {:msg "asdf" :time 0 :user {:name "Bob" :nickname "Ray"}}
-                      {:msg "asdf" :time 0 :user {:name "Bob" :nickname "Ray"}}
-                      {:msg "asdf" :time 0 :user {:name "Bob" :nickname "Ray"}}
-                      {:msg "asdf" :time 0 :user {:name "Bob" :nickname "Ray"}}
-                      {:msg "asdf" :time 0 :user {:name "Bob" :nickname "Ray"}}
-                      {:msg "asdf" :time 0 :user {:name "Bob" :nickname "Ray"}}
-                      {:msg "asdf" :time 0 :user {:name "Bob" :nickname "Ray"}}
-                      {:msg "asdf" :time 0 :user {:name "Bob" :nickname "Ray"}}]}))
-                                                                                                                                                                               
+(def channels (atom {"default" []}))
+
 (defn add-msg
   "Expects to receive a map of channels of the form:
 

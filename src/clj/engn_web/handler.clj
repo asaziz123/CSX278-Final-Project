@@ -30,7 +30,7 @@
    (include-css (if (env :dev) "/css/site.css" "/css/site.min.css"))
    (if-not (nil? user)
      [:script
-      (str "var user = {name:\"" (:name user) "\",nickname:\"" (:nickname user) "\"}")])])
+      (str "var user = {name:\"" (:name user) "\",nickname:\"" (:nickname user) "\", picture:\"" (:picture user) "\"}")])])
 
 (defn json [data]
   {:status 200 :headers json-header :body data})
