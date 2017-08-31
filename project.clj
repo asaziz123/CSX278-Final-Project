@@ -10,6 +10,7 @@
                  [reagent-utils "0.2.1"]
                  [ring "1.6.1"]
                  [ring/ring-defaults "0.3.0"]
+                 [ring/ring-json "0.4.0"]
                  [compojure "1.6.0"]
                  [hiccup "1.0.5"]
                  [yogthos/config "0.8"]
@@ -19,6 +20,7 @@
                  [cljs-ajax "0.6.0"]
                  [com.andrewmcveigh/cljs-time "0.5.0"]
                  [reagent-material-ui "0.2.4"]
+                 [cs4278.grading "0.1.1-SNAPSHOT"]
                  [venantius/accountant "0.2.0"
                   :exclusions [org.clojure/tools.reader]]
                  [auth0-ring "0.1.0"]]
@@ -28,9 +30,16 @@
             ;[lein-midje "3.0.0"]
             ;[venantius/ultra "0.5.1"]
             ;[lein-codox "0.10.3"]
+            [s3-wagon-private "1.3.0"]
             [com.jakemccrary/lein-test-refresh "0.18.1"]
             [lein-asset-minifier "0.2.7"
              :exclusions [org.clojure/clojure]]]
+
+  :repositories [["private" {:url "s3p://cs4278/releases/" :creds :gpg}]
+                 ["central" "http://repo1.maven.org/maven2"]
+                 ["clojure" "http://build.clojure.org/releases"]
+                 ["clojure-snapshots" "http://build.clojure.org/snapshots"]
+                 ["clojars" "http://clojars.org/repo/"]]
 
   :ring {:handler engn-web.handler/app
          :uberwar-name "engn-web.war"}
@@ -114,7 +123,6 @@
                    :dependencies [[binaryage/devtools "0.9.4"]
                                   [ring/ring-mock "0.3.1"]
                                   [ring/ring-devel "1.6.1"]
-                                  [ring/ring-json "0.4.0"]
                                   [prone "1.1.4"]
                                   [figwheel-sidecar "0.5.11"]
                                   [org.clojure/tools.nrepl "0.2.13"]

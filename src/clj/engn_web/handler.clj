@@ -10,67 +10,107 @@
             [ring.middleware.cookies :refer [wrap-cookies]]
             [ring.middleware.params :refer [wrap-params]]))
 
+
+;; ==========================================================================
+;; Utility functions for serving up a JSON REST API
+;; ==========================================================================
+
+(def json-header
+  "Utility function to set the appropriate headers in an
+   HTTP response to return JSON to the client"
+  {"Content-Type" "application/json"})
+
+(defn json
+  "Utility function to return JSON to the client"
+  [data]
+  {:status 200 :headers json-header :body data})
+
+
+;; ==========================================================================
+;; The JSON REST API for sending messages, listing channels,
+;; etc.
+;; ==========================================================================
+
+(defn channel-list
+  "List the set of currently known channels"
+  [] (json (channels/channel-list)))
+
+(defn channel-get
+  "Return the messages in a specific channel"
+  [id]
+  (json (channels/channel-get id)))
+
+(defn msg-create
+  "Utility function to create a message data
+   structure"
+  [msg userobj]
+  (let [{:keys [name nickname]} userobj
+        user {:name name :nickname nickname}
+        time (System/currentTimeMillis)]
+      {:msg msg :time time :user user}))
+
+(defn channel-add!
+   "Add a message to the specified channel"
+   [channel msg-data user-obj]
+   (let [msg (msg-create msg-data user-obj)]
+    (json (channels/channel-add! channel msg))))
+
+
+;; ==========================================================================
+;; Functions to render the HTML for the single-page application
+;; ==========================================================================
+
 (def mount-target
+  "This is the page that is displayed before figwheel
+   compiles your application"
   [:div#app
       [:h3 "ClojureScript has not been compiled!"]
       [:p "please run "
        [:b "lein figwheel"]
-       " in order to start the compiler"]])
+       " in order to start the compiler (this page may self-destruct)"]])
 
-(def json-header {"Content-Type" "application/json"})
+(defn include-user
+  "This function inserts the user information directly into a <script> tag
+   so that it can be accessed via Javascript in the 'user' variable"
+  [user]
+  (if-not (nil? user)
+    [:script
+     (str "var user = {name:\"" (:name user)
+          "\",nickname:\"" (:nickname user)
+          "\", picture:\"" (:picture user) "\"}")]))
 
 (defn head [user]
+  "Function to generate the <head> tag in the main HTML page that is
+   returned to the browser"
   [:head
    [:meta {:charset "utf-8"}]
    [:meta {:name "viewport"
            :content "width=device-width, initial-scale=1"}]
-   (include-css "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css")
-   (include-css "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css")
-   (include-css "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
+   (include-css "https://fonts.googleapis.com/icon?family=Material+Icons")
+   (include-css "https://fonts.googleapis.com/css?family=Roboto:300,400,500")
    (include-css (if (env :dev) "/css/site.css" "/css/site.min.css"))
-   (if-not (nil? user)
-     [:script
-      (str "var user = {name:\"" (:name user) "\",nickname:\"" (:nickname user) "\", picture:\"" (:picture user) "\"}")])])
+   (include-user user)])
 
-(defn json [data]
-  {:status 200 :headers json-header :body data})
-
-(defn loading-page [user]
+(defn main-page
+   "Generates the main HTML page for the single-page application"
+   [user]
    (html5
      (head user)
      [:body
        mount-target
        (include-js "/js/app.js")]))
 
-(defn cards-page []
-  (html5
-    (head)
-    [:body
-     mount-target
-     (include-js "/js/app_devcards.js")]))
 
-(defn channel-get [id]
-  (json (channels/channel-get! id)))
-
-(defn msg-create [msg userobj]
- (let [{:keys [name nickname]} userobj
-       user {:name name :nickname nickname}
-       time (System/currentTimeMillis)]
-      {:msg msg :time time :user user}))
-
-(defn channel-add! [id msg-data user-obj]
-   (println "Add msg:" msg-data)
-   (let [msg (msg-create msg-data user-obj)]
-    (json (channels/channel-add! id msg))))
-
-(defn channel-list [] (json (channels/channel-list)))
+;; ==========================================================================
+;; Functions to setup the list of URI routes for the application
+;; and setup the appropriate middleware wrappers
+;; ==========================================================================
 
 (defroutes routes
-  (GET "/" request (loading-page (auth/get-user request)))
+  (GET "/" request (main-page (auth/get-user request)))
   (GET "/channel" [] (channel-list))
   (GET "/channel/:id" [id] (channel-get id))
   (POST "/channel/:id" [id msg :as request] (channel-add! id msg (auth/get-user request)))
-  (GET "/cards" [] (cards-page))
   (resources "/")
   (not-found "Not Found"))
 
