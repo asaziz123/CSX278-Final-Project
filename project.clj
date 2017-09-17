@@ -20,13 +20,14 @@
                  [cljs-ajax "0.6.0"]
                  [com.andrewmcveigh/cljs-time "0.5.0"]
                  [reagent-material-ui "0.2.4"]
-                 [cs4278.grading "0.1.1-SNAPSHOT"]
+                 [cs4278.grading "0.1.2-SNAPSHOT"]
                  [venantius/accountant "0.2.0"
                   :exclusions [org.clojure/tools.reader]]
                  [auth0-ring "0.1.0"]]
 
   :plugins [[lein-environ "1.0.2"]
             [lein-cljsbuild "1.1.5"]
+            [lein-exec "0.3.6"]
             ;[lein-midje "3.0.0"]
             ;[venantius/ultra "0.5.1"]
             ;[lein-codox "0.10.3"]
@@ -40,6 +41,8 @@
                  ["clojure" "http://build.clojure.org/releases"]
                  ["clojure-snapshots" "http://build.clojure.org/snapshots"]
                  ["clojars" "http://clojars.org/repo/"]]
+
+   :aliases {"grade" ["exec" "-ep" "(use 'cs4278.grading) (grade sample-testsuite)"]}
 
   :ring {:handler engn-web.handler/app
          :uberwar-name "engn-web.war"}
