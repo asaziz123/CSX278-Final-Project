@@ -59,6 +59,11 @@
 ;; later in class
 ;; ==========================================================================
 
+(defn message-create [msg]
+  {:msg msg
+   :user {:name "Your Name" :nickname "You"}
+   :time (time/now)})
+
 (defn messages-get! [channel]
   (reset! msgs (messaging/messages-get @messaging-state channel)))
 
@@ -72,7 +77,7 @@
 
 (defn add-msg! []
   (let [channel @current-channel
-        msg     @msg-entry]
+        msg     (message-create @msg-entry)]
     (swap! messaging-state messaging/messages-add channel msg)
     (reset! msgs (messaging/messages-get @messaging-state channel))
     (reset! msg-entry "")
