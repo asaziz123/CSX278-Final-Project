@@ -75,9 +75,12 @@
   [user]
   (if-not (nil? user)
     [:script
-     (str "var user = {name:\"" (:name user)
-          "\",nickname:\"" (:nickname user)
-          "\", picture:\"" (:picture user) "\"}")]))
+     ; (str "var user = {name:\"" (:name user)
+     ;      "\",nickname:\"" (:nickname user)
+     ;      "\", picture:\"" (:picture user) "\"}")]))
+     (str "var user = {name:\"Your Name\",
+          nickname:\"You\",
+          picture:\"https://s.gravatar.com/avatar/a9edda10d0e6fb75561f057d167a9077?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fyu.png\"}")]))
 
 (defn head [user]
   "Function to generate the <head> tag in the main HTML page that is
@@ -116,7 +119,7 @@
 
 
 (def app (->  (wrap-middleware #'routes)
-              auth/wrap-auth
+              ;auth/wrap-auth
               (json/wrap-json-response)
               (json/wrap-json-params)
               wrap-params

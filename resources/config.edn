@@ -1,8 +1,8 @@
 {:domain "magnum.auth0.com"
  :issuer "https://magnum.auth0.com/"
- :client-id "B7aOtrTYvW6enR13DZsQ4gI58QGEeHtE"
+ :client-id ""
  :signing-algorithm :hs256
- :client-secret "tPBPYYlRK2fnZ1RNGSao_R9zQEnpyqES9obsUK9UlhjUr6Fm7ckE0UlgD19s5xBG"
+ :client-secret ""
  :scope "openid groups permissions roles user_id name nickname email picture"
  :callback-path "/auth/callback"
  :error-redirect "/login"

@@ -6,7 +6,8 @@
               [cljs-time.format :as time-format]
               [cljs-time.coerce :as time-coerce]
               [reagent-material-ui.core :as ui]
-              [ajax.core :refer [GET POST]]))
+              [ajax.core :refer [GET POST]]
+              [engn-web.local-messaging :as messaging]))
 
 
 ;; ==========================================================================
@@ -27,10 +28,18 @@
 (defn icon-span [nme] [ui/FontIcon {:className "material-icons"} nme])
 (defn icon [nme] (el [:i.material-icons nme]))
 (defn color [nme] (aget ui/colors nme))
+(defn scroll-window-to-bottom []
+  (.setTimeout js/window #(.scrollTo js/window 0 (+ 0 (.-scrollHeight (.-body js/document)))) 100))
+
 
 ;; ==========================================================================
 ;; App State
+;;
+;; This is messy right now, which will motivate something we learn
+;; later in class
 ;; ==========================================================================
+
+(defonce messaging-state (atom {"default" [{:msg "Channel started" :time 0 :user {:name "Your Name" :nickname "You"}}]}))
 
 (defonce channels (atom []))
 (defonce msgs (atom []))
@@ -45,56 +54,37 @@
 
 ;; ==========================================================================
 ;; Functions to send / receive messages and list channels
+;;
+;; This is messy right now, which will motivate something we learn
+;; later in class
 ;; ==========================================================================
 
-(GET "/channel" {:response-format :json
-                 :keywords? true
-                 :error-handler error-handler
-                 :handler (fn [r] (reset! channels r)(println "swap done: " @channels))})
+(defn messages-get! [channel]
+  (reset! msgs (messaging/messages-get @messaging-state channel)))
 
-(defn messages-load [channel]
-  (GET (str "/channel/" channel)
-       {:response-format :json
-        :keywords? true
-        :error-handler error-handler
-        :handler (fn [r] (println r)(reset! msgs r))}))
-
-(defn open-channel [channel]
+(defn open-channel! [channel]
    (reset! current-channel channel)
-   (messages-load channel))
+   (messages-get! channel)
+   (scroll-window-to-bottom))
 
-(defn push [msgs msg]
-  (conj (seq msgs) msg))
-
-(defn messages-add! [channel msg]
-  (POST (str "/channel/" channel)
-       {:params {:msg msg}
-        :response-format :json
-        :format :json
-        :keywords? true
-        :error-handler error-handler
-        :handler (fn [r] (log "msg posted to server"))})
-  (swap! msgs push {:msg msg
-                    :user user
-                    :time (time-coerce/to-long (time/now))})
-  (.setTimeout js/window #(.scrollTo js/window 0 (+ 0 (.-scrollHeight (.-body js/document)))) 250))
+(defn list-channels! []
+  (reset! channels (messaging/channels-list @messaging-state)))
 
 (defn add-msg! []
-  (messages-add! @current-channel @msg-entry)
-  (reset! msg-entry ""))
+  (let [channel @current-channel
+        msg     @msg-entry]
+    (swap! messaging-state messaging/messages-add channel msg)
+    (reset! msgs (messaging/messages-get @messaging-state channel))
+    (reset! msg-entry "")
+    (scroll-window-to-bottom)))
 
 (defn add-channel! [channel]
-  (if (not-any? #(= channel %) @channels)
-    (do
-      (POST (str "/channel/" channel)
-          {:params {:msg "Channel start"}
-           :response-format :json
-           :format :json
-           :keywords? true
-           :error-handler error-handler
-           :handler (fn [r] (log "msg posted to server"))})
-      (swap! channels conj channel))))
+  (swap! messaging-state messaging/channels-add channel)
+  (reset! channels (messaging/channels-list @messaging-state))
+  (open-channel! channel))
 
+(list-channels!)
+(open-channel! "default")
 
 ;; ==========================================================================
 ;; View components
@@ -109,7 +99,7 @@
       [ui/Card {:class class}
        [ui/CardHeader {:title name
                        :subtitle formatted-time
-                       :avatar "https://s.gravatar.com/avatar/a9edda10d0e6fb75561f057d167a9077?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fju.png";"http://placehold.it/50/55C1E7/fff&text=U"
+                       :avatar "https://s.gravatar.com/avatar/a9edda10d0e6fb75561f057d167a9077?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fyu.png";"http://placehold.it/50/55C1E7/fff&text=U"
                        :actAsExpander true
                        :showExpandableButton false}]
        [ui/CardText text]]))
@@ -123,7 +113,7 @@
   [ui/ListItem {:leftIcon (icon "label_outline")
                 ;:rightIcon [icon "chat"]
                 :primaryText (str "#" c)
-                :onTouchTap #(open-channel c)}])
+                :onTouchTap #(open-channel! c)}])
 
 
 (defn channel-list []
@@ -149,16 +139,6 @@
             :floatingLabelText "Channel name"
             :floatingLabelFixed false
             :onChange #(reset! chnl-entry (-> % .-target .-value))}]]))
-         ; :value @msg-entry}]])
-
-
-;; create a new theme based on the dark theme from Material UI
-; (defonce theme-defaults {:muiTheme (ui/getMuiTheme
-;                                     (-> ui/darkBaseTheme
-;                                         (js->clj :keywordize-keys true)
-;                                         (update :palette merge {:primary1Color (color "amber500")
-;                                                                 :primary2Color (color "amber700")})
-;                                         clj->js))})
 
 (defn simple-nav []
   (let [close #(reset! nav-open? false)]
