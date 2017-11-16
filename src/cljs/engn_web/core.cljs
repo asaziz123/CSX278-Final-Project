@@ -138,7 +138,7 @@
 (defn channel-add-dialog []
   (let [hide-dialog #(reset! add-channel-dialog-open? false)]
     [ui/Dialog {:open @add-channel-dialog-open?
-                :title "Dialog With Date Picker"
+                :title "Create New Channel"
                 :actions [ (el [ui/FlatButton {:label "Cancel" :primary false :onTouchTap hide-dialog}])
                            (el [ui/FlatButton {:label "OK" :primary true :onTouchTap #(do
                                                                                         (add-channel! @chnl-entry)
