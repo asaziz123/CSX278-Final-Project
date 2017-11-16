@@ -3,7 +3,7 @@
 
 ;; We use a thread-safe atom to maintain the list of messages
 ;; that have been sent
-(def channels (atom {"default" []}))
+(def channels (atom {"default" [{:msg "Modify me!" :time 0 :user {:name "Your Name" :nickname "You"}} {:msg "Should show" :time (System/current/currentTimeMillis) :user {:name "Your Name" :nickname "You"}}]}))
 
 (defn add-msg
   "Expects to receive a map of channels of the form:
@@ -28,6 +28,12 @@
   "Returns the messages in the channel. The default limit is the last
    500 messages, unless the :limit key is set to a different value."
   [channel & {:keys [limit] :or {limit 500}}]
-  (take limit (or (get @channels channel) '())))
+
+(take limit (or
+(filter #(< (- (System/current/currentTimeMillis) (:time %))  604800000)
+(get @channels channel)
+)
+ '()))
+)
 
 (defn channel-list "Returns a list of the available channels" [] (keys @channels))
