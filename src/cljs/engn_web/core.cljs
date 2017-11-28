@@ -87,7 +87,7 @@
   (if (not-any? #(= channel %) @channels)
     (do
       (POST (str "/channel/" channel)
-          {:params {:msg "Channel start"}
+          {:params {:msg "Conversation start"}
            :response-format :json
            :format :json
            :keywords? true
@@ -122,13 +122,13 @@
 (defn channel [c]
   [ui/ListItem {:leftIcon (icon "label_outline")
                 ;:rightIcon [icon "chat"]
-                :primaryText (str "#" c)
+                :primaryText (str c)
                 :onTouchTap #(open-channel c)}])
 
 
 (defn channel-list []
   [ui/List
-   [ui/Subheader "Channels"
+   [ui/Subheader "Conversations"
     [ui/ListItem {:leftIcon (icon "add_circle_outline")
                   :primaryText "Add Channel"
                   :onTouchTap #(do (println @add-channel-dialog-open?)(reset! add-channel-dialog-open? true))}]
@@ -164,7 +164,7 @@
   (let [close #(reset! nav-open? false)]
     (fn []
       [:div#header
-       [ui/AppBar {:title "chat engn" :onLeftIconButtonTouchTap #(reset! nav-open? true)}
+       [ui/AppBar {:title "Grief Net" :onLeftIconButtonTouchTap #(reset! nav-open? true) :style {:backgroundColor "#81AA47"}}
         [ui/IconMenu {:iconButtonElement (el [ui/IconButton {:style {:color "#FFF"}} (icon "more_vert")])
                                          :targetOrigin {:horizontal "right" :vertical "top"}
                                          :anchorOrigin {:horizontal "right" :vertical "top"}}
@@ -173,7 +173,7 @@
                    :docked true
                    :style {:z-index 10001}
                    :containerStyle {:z-index 10001}}
-        [ui/AppBar {:title "chat engn" :onLeftIconButtonTouchTap #(reset! nav-open? false)}]
+        [ui/AppBar {:title "Grief Net" :onLeftIconButtonTouchTap #(reset! nav-open? false) :style {:backgroundColor "#81AA47"}}]
 
         [ui/List
          [ui/ListItem {:disabled true}
@@ -194,7 +194,7 @@
      [simple-nav]
      [:div {:style {:padding "10px 10px 10px 10px"}}
       [ui/Card {:class class :style {:margin-top "60px"}}
-        [ui/CardHeader {:title (str "#" @current-channel)}]]
+        [ui/CardHeader {:title (str @current-channel) :titleStyle {:fontSize "200%"}}]]
       (messages (reverse @msgs))]
      [:footer {:class class}
        [ui/Toolbar {:style {:align "center"}}
@@ -208,7 +208,7 @@
                  :onChange #(reset! msg-entry (-> % .-target .-value))
                  :value @msg-entry
                  :on-key-press (fn [e](if (= 13 (.-charCode e)) (add-msg!)))}]
-           [ui/RaisedButton {:label "Send" :primary true :onTouchTap add-msg!}]]]]]]))
+           [ui/RaisedButton {:label "Send" :onTouchTap add-msg! :backgroundColor "#81AA47" :labelColor "#FFF"}]]]]]]))
 
 
 
