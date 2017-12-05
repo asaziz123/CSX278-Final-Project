@@ -36,6 +36,7 @@
 (defonce msgs (atom []))
 (defonce msg-entry (atom ""))
 (defonce chnl-entry (atom ""))
+(defonce hide-msg (atom false))
 (defonce current-channel (atom "default"))
 (defonce scroll-msgs (atom false))
 (defonce nav-open? (atom false))
@@ -64,11 +65,11 @@
    (messages-load channel))
 
 (defn push [msgs msg]
-  (conj (seq msgs) msg))
+  (reverse (conj (reverse (seq msgs)) msg)))
 
-(defn messages-add! [channel msg]
+(defn messages-add! [channel msg sensative]
   (POST (str "/channel/" channel)
-       {:params {:msg msg}
+       {:params {:msg msg :hide sensative}
         :response-format :json
         :format :json
         :keywords? true
@@ -76,11 +77,12 @@
         :handler (fn [r] (log "msg posted to server"))})
   (swap! msgs push {:msg msg
                     :user user
-                    :time (time-coerce/to-long (time/now))})
+                    :time (time-coerce/to-long (time/now))
+                    :hide sensative})
   (.setTimeout js/window #(.scrollTo js/window 0 (+ 0 (.-scrollHeight (.-body js/document)))) 250))
 
 (defn add-msg! []
-  (messages-add! @current-channel @msg-entry)
+  (messages-add! @current-channel @msg-entry @hide-msg)
   (reset! msg-entry ""))
 
 (defn add-channel! [channel]
@@ -111,8 +113,8 @@
                        :subtitle formatted-time
                        :avatar "https://s.gravatar.com/avatar/a9edda10d0e6fb75561f057d167a9077?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fju.png";"http://placehold.it/50/55C1E7/fff&text=U"
                        :actAsExpander true
-                       :showExpandableButton false}]
-       [ui/CardText text]]))
+                       :showExpandableButton (:hide m)}]
+       [ui/CardText {:expandable (:hide m)} text]]))
 
 (defn messages [ms]
   [:div {:style {:margin-bottom "100px"}}
@@ -198,17 +200,18 @@
       (messages (reverse @msgs))]
      [:footer {:class class}
        [ui/Toolbar {:style {:align "center"}}
-         [ui/ToolbarGroup {:style {:width "70%"}}
+         [ui/ToolbarGroup {:style {:width "100%"}}
            [:div {:style {:width "10px"}}]
            [ui/ToolbarSeparator]
            [ui/TextField
-                {:style {:width "800px" :margin-left "20px"}
+                {:style {:width "75%" :margin-left "20px"}
                  :floatingLabelText "What would you like to say..."
                  :floatingLabelFixed false
                  :onChange #(reset! msg-entry (-> % .-target .-value))
                  :value @msg-entry
                  :on-key-press (fn [e](if (= 13 (.-charCode e)) (add-msg!)))}]
-           [ui/RaisedButton {:label "Send" :onTouchTap add-msg! :backgroundColor "#81AA47" :labelColor "#FFF"}]]]]]]))
+           [ui/Checkbox {:label "Sensative" :style {:align "left" :width "15%"} :on-check #(reset! hide-msg (not @hide-msg))}]
+           [ui/RaisedButton {:label "Send" :onTouchTap add-msg! :backgroundColor "#81AA47" :labelColor "#FFF" :style {:width "10%"}}]]]]]]))
 
 
 

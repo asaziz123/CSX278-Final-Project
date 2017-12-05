@@ -43,16 +43,16 @@
 (defn msg-create
   "Utility function to create a message data
    structure"
-  [msg userobj]
+  [msg userobj sensative]
   (let [{:keys [name nickname]} userobj
         user {:name name :nickname nickname}
         time (System/currentTimeMillis)]
-      {:msg msg :time time :user user}))
+      {:msg msg :time time :user user :hide sensative}))
 
 (defn channel-add!
    "Add a message to the specified channel"
-   [channel msg-data user-obj]
-   (let [msg (msg-create msg-data user-obj)]
+   [channel msg-data user-obj sensative]
+   (let [msg (msg-create msg-data user-obj sensative)]
     (json (channels/channel-add! channel msg))))
 
 
@@ -110,7 +110,7 @@
   (GET "/" request (main-page (auth/get-user request)))
   (GET "/channel" [] (channel-list))
   (GET "/channel/:id" [id] (channel-get id))
-  (POST "/channel/:id" [id msg :as request] (channel-add! id msg (auth/get-user request)))
+  (POST "/channel/:id" [id msg hide :as request] (channel-add! id msg (auth/get-user request) hide))
   (resources "/")
   (not-found "Not Found"))
 
