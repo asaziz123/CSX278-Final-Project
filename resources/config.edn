@@ -9,5 +9,5 @@
  :success-redirect "/"
  :logout-handler "/auth/logout"
  :logout-redirect "/"
- :title "Grief Net"
+ :title "Talking Place \nA GriefNet Project"
  :logo ""}
