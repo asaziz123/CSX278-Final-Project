@@ -2,12 +2,12 @@
  :issuer "https://csx278griefnet.auth0.com/"
  :client-id "2PNJW6QNyw3PJHe8CMQqKM48PTO8ov4g"
  :signing-algorithm :hs256
- :client-secret "CoX5j7h6ecZzzRmKl49-3M61HvBIinfovdWeCB6lyBkQ6XQsi7tXZ-XKW5YNlI33"
+ :client-secret "fzqroB8jIapa-tP90Igwqj4AADOew5lMsNLM3Ki82Ie7WLM8bpYYv1Zj0bKCLEV8"
  :scope "openid groups permissions roles user_id name nickname email picture"
  :callback-path "/auth/callback"
  :error-redirect "/login"
  :success-redirect "/"
  :logout-handler "/auth/logout"
  :logout-redirect "/"
- :title "Grief Net"
- :logo ""}
+ :title "Talking Place"
+ :logo "https://drive.google.com/file/d/1OZ48VD61lbaQZq0rTZmckasQefiNpxH6/view?usp=sharing"}
