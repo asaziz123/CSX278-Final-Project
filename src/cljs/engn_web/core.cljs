@@ -43,7 +43,7 @@
 (defonce add-channel-dialog-open? (atom false))
 (defonce user (js->clj js/user :keywordize-keys true))
 (defonce user-pseudonym-map (atom {}))
-(defonce user-pseudonym-set (atom ["alleycat", "giraffe", "koala", "kangaroo", "whippet", "monkey"]))
+(defonce user-pseudonym-set (atom ["alleycat", "giraffe", "koala", "kangaroo", "monkey"]))
 
 
 ;; ==========================================================================
@@ -131,7 +131,7 @@
       [ui/Card {:class class}
        [ui/CardHeader {:title name
                        :subtitle formatted-time
-                       :avatar "https://lh3.googleusercontent.com/BFfA9Qhnyj30Fb-sKkZP0s_vkrMPNjVHEfcBPgVVa_BCQNy2NPgkU787K8vXVCnvNv5So47aqTxlYWQp0LBM=w1920-h974"; "https://s.gravatar.com/avatar/a9edda10d0e6fb75561f057d167a9077?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fju.png";"http://placehold.it/50/55C1E7/fff&text=U"
+                       :avatar "https://lh5.googleusercontent.com/oUF36fifOHJ4syW-2ivbGajvaFDK14Tz-l2w3crT39UWtlC78IfdxE-vQEoeKRoOUM-05CB30GPSy9xsPDzv=w1920-h974"; "https://s.gravatar.com/avatar/a9edda10d0e6fb75561f057d167a9077?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fju.png";"http://placehold.it/50/55C1E7/fff&text=U"
                        :actAsExpander true
                        :showExpandableButton (:hide m)}]
        [ui/CardText {:expandable (:hide m)} text]]))

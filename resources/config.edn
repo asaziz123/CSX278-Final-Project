@@ -10,4 +10,4 @@
  :logout-handler "/auth/logout"
  :logout-redirect "/"
  :title "TalkingPlace"
- :logo "https://lh3.googleusercontent.com/BFfA9Qhnyj30Fb-sKkZP0s_vkrMPNjVHEfcBPgVVa_BCQNy2NPgkU787K8vXVCnvNv5So47aqTxlYWQp0LBM=w1920-h974"}
+ :logo "https://lh5.googleusercontent.com/oUF36fifOHJ4syW-2ivbGajvaFDK14Tz-l2w3crT39UWtlC78IfdxE-vQEoeKRoOUM-05CB30GPSy9xsPDzv=w1920-h974"}
