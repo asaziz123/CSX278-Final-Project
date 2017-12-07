@@ -37,7 +37,7 @@
 (defonce msg-entry (atom ""))
 (defonce chnl-entry (atom ""))
 (defonce hide-msg (atom false))
-(defonce current-channel (atom "Loss of Family Member"))
+(defonce current-channel (atom "Welcome"))
 (defonce scroll-msgs (atom false))
 (defonce nav-open? (atom false))
 (defonce add-channel-dialog-open? (atom false))
