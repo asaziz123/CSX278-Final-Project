@@ -42,6 +42,8 @@
 (defonce nav-open? (atom false))
 (defonce add-channel-dialog-open? (atom false))
 (defonce user (js->clj js/user :keywordize-keys true))
+(defonce user-pseudonym-map (atom {}))
+(defonce user-pseudonym-set (atom ["alleycat", "giraffe", "koala", "kangaroo", "whippet", "monkey"]))
 
 
 ;; ==========================================================================
@@ -102,8 +104,26 @@
 ;; View components
 ;; ==========================================================================
 
+(defn assign-new-pseudonym [user]
+  (print "assign function")
+  (print (str (rand-nth @user-pseudonym-set) (rand-int 10000)))
+  (reset! user-pseudonym-map
+    (assoc @user-pseudonym-map (:nickname user)
+      (str (rand-nth @user-pseudonym-set) (rand-int 10000))))
+  (print (get @user-pseudonym-map (:nickname user)))
+  (get @user-pseudonym-map (:nickname user)))
+
+(defn anonymize-user [user]
+  ; (print (get @user-pseudonym-map (:nickname user) (assign-new-pseudonym user)))
+  (if (contains? @user-pseudonym-map (:nickname user))
+    (get @user-pseudonym-map (:nickname user))
+    (assign-new-pseudonym user))
+  ; (get @user-pseudonym-map (:nickname user) (assign-new-pseudonym user))
+  )
+  ;;;TEST THIS THING FOR LAZINESS
+
 (defn message [m]
-  (let [name (:nickname (:user m))
+  (let [name (anonymize-user (:user m))
         text (:msg m)
         class (if @nav-open? "message open" "message closed")
         formatter (time-format/formatter "MM/dd/yyyy hh:mm:ss")
