@@ -3,7 +3,7 @@
 
 ;; We use a thread-safe atom to maintain the list of messages
 ;; that have been sent
-(def channels (atom {"default" [{:msg "Modify me!" :time 0 :user {:name "Your Name" :nickname "You"} :hide false} {:msg "Should show" :time (System/current/currentTimeMillis) :user {:name "Your Name" :nickname "You"} :hide true}]}))
+(def channels (atom {"Loss of Family Member" [] "Divorce" [] "Financial Issues" [] "Loss of a Friend" []}))
 
 (defn add-msg
   "Expects to receive a map of channels of the form:
