@@ -37,7 +37,7 @@
 (defonce msg-entry (atom ""))
 (defonce chnl-entry (atom ""))
 (defonce hide-msg (atom false))
-(defonce current-channel (atom "default"))
+(defonce current-channel (atom "Loss of Family Member"))
 (defonce scroll-msgs (atom false))
 (defonce nav-open? (atom false))
 (defonce add-channel-dialog-open? (atom false))
@@ -131,9 +131,9 @@
 (defn channel-list []
   [ui/List
    [ui/Subheader "Conversations"
-    [ui/ListItem {:leftIcon (icon "add_circle_outline")
-                  :primaryText "Add Channel"
-                  :onTouchTap #(do (println @add-channel-dialog-open?)(reset! add-channel-dialog-open? true))}]
+    ;[ui/ListItem {:leftIcon (icon "add_circle_outline")
+     ;             :primaryText "Add Channel"
+      ;            :onTouchTap #(do (println @add-channel-dialog-open?)(reset! add-channel-dialog-open? true))}]
     (for [c @channels]
          ^{:key c} [channel c])]])
 
@@ -192,7 +192,7 @@
   (let [class (if @nav-open? "message open" "message closed")]
    [ui/MuiThemeProvider ;theme-defaults
     [:div
-     [channel-add-dialog]
+     ;[channel-add-dialog]
      [simple-nav]
      [:div {:style {:padding "10px 10px 10px 10px"}}
       [ui/Card {:class class :style {:margin-top "60px"}}
