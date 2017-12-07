@@ -9,5 +9,5 @@
  :success-redirect "/"
  :logout-handler "/auth/logout"
  :logout-redirect "/"
- :title "CS 4278/5278"
- :logo "http://a1.espncdn.com/combiner/i?img=/i/teamlogos/ncaa/500/238.png&w=128&h=128&transparent=true"}
+ :title "TalkingPlace"
+ :logo "https://lh4.googleusercontent.com/ucGbV4NtWL_77Najhans2ydXVp8CRApG2ihqEehgCaxjRdUQCHYpGnUpp6t9nI_iWQTdfq-XQIdZ4KfQ9eL6=w959-h925"}
