@@ -37,7 +37,7 @@
 (defonce msg-entry (atom ""))
 (defonce chnl-entry (atom ""))
 (defonce hide-msg (atom false))
-(defonce current-channel (atom "Loss of Family Member"))
+(defonce current-channel (atom "Welcome"))
 (defonce scroll-msgs (atom false))
 (defonce nav-open? (atom false))
 (defonce add-channel-dialog-open? (atom false))
@@ -210,7 +210,7 @@
                  :onChange #(reset! msg-entry (-> % .-target .-value))
                  :value @msg-entry
                  :on-key-press (fn [e](if (= 13 (.-charCode e)) (add-msg!)))}]
-           [ui/Checkbox {:label "Sensative" :style {:align "left" :width "15%"} :on-check #(reset! hide-msg (not @hide-msg))}]
+           [ui/Checkbox {:label "Sensitive" :style {:align "left" :width "15%"} :on-check #(reset! hide-msg (not @hide-msg))}]
            [ui/RaisedButton {:label "Send" :onTouchTap add-msg! :backgroundColor "#81AA47" :labelColor "#FFF" :style {:width "10%"}}]]]]]]))
 
 

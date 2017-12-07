@@ -3,7 +3,7 @@
 
 ;; We use a thread-safe atom to maintain the list of messages
 ;; that have been sent
-(def channels (atom {"Loss of Family Member" [] "Divorce" [] "Financial Issues" [] "Loss of a Friend" []}))
+(def channels (atom {"Welcome" [] "Loss of Family Member" [] "Loss of a Friend" []  "Divorce" [] "Financial Issues" []}))
 
 (defn add-msg
   "Expects to receive a map of channels of the form:
