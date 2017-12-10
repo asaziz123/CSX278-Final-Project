@@ -3,8 +3,7 @@
 
 ;; We use a thread-safe atom to maintain the list of messages
 ;; that have been sent
-(def channels (atom {"Welcome" [{:msg "Welcome to TalkingPlace! This community is here to help you cope with grief." :time (System/current/currentTimeMillis) :user {:name "Welcome" :nickname "Welcome"} :hide false}]
-"Loss of Family Member" [{:msg "Hi. I recently lost my uncle to cancer. I'm looking for coping strategies to help me when I'm alone." :time (System/current/currentTimeMillis) :user {:name "Ben" :nickname "Ben"} :hide false}] "Loss of a Friend" [{:msg "Hi. One of my friends back home recently committed suicide and it's just been really hard for me to get through the week. I just need to hear from people who understand what I'm going through to offer encouragement." :time (System/current/currentTimeMillis) :user {:name "Austin" :nickname "Austin"} :hide true}]  "Divorce" [] "Financial Issues" []}))
+(def channels (atom {"Welcome" [{:msg "Welcome to TalkingPlace! This community is here to help you cope with grief." :time (System/current/currentTimeMillis) :user {:name "Welcome" :nickname "Welcome"} :hide false}] "Loss of Family Member" [] "Loss of a Friend" []  "Divorce" [] "Financial Issues" []}))
 
 (defn add-msg
   "Expects to receive a map of channels of the form:

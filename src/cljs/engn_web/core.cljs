@@ -131,7 +131,7 @@
       [ui/Card {:class class}
        [ui/CardHeader {:title name
                        :subtitle formatted-time
-                       :avatar "https://lh5.googleusercontent.com/oUF36fifOHJ4syW-2ivbGajvaFDK14Tz-l2w3crT39UWtlC78IfdxE-vQEoeKRoOUM-05CB30GPSy9xsPDzv=w1920-h974"; "https://s.gravatar.com/avatar/a9edda10d0e6fb75561f057d167a9077?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fju.png";"http://placehold.it/50/55C1E7/fff&text=U"
+                       :avatar "https://photos-4.dropbox.com/t/2/AACFzoE5X7rn0MbQ62ncNlC4jO47NRkEfOZpAkbLwVUOaw/12/721971287/png/32x32/1/_/1/2/talking_place_logo.png/EMC4tJkHGAMgAigC/PQOCM7_i88N0x7Hj1-HFoRk32hSFTPSREL6FRyJiSlM?preserve_transparency=1&size=2048x1536&size_mode=3"; "https://s.gravatar.com/avatar/a9edda10d0e6fb75561f057d167a9077?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fju.png";"http://placehold.it/50/55C1E7/fff&text=U"
                        :actAsExpander true
                        :showExpandableButton (:hide m)}]
        [ui/CardText {:expandable (:hide m)} text]]))
