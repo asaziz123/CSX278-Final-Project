@@ -34,12 +34,13 @@
 
 
 (deftest test-anonymizing
-  (let [user1 {:name "User1" :nickname "U1"}
+  (testing "testing anonymization functions"
+    (let [user1 {:name "User1" :nickname "U1"}
         user2 {:name "User2" :nickname "U2"}]
     (is (= (rc/anonymize-user user1) (rc/anonymize-user user1)))
     (is (= (rc/anonymize-user user2) (rc/anonymize-user user2)))
     (is (not= (rc/anonymize-user user1) (rc/anonymize-user user2)))
-    (is (not= (rc/anonymize-user user2) (rc/anonymize-user user1)))))
+    (is (not= (rc/anonymize-user user2) (rc/anonymize-user user1))))))
 
 
 (deftest test-home

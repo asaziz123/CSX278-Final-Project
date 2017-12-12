@@ -2,6 +2,7 @@
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
             [auth0-ring.handlers :as auth0]
+            [ring.util.response]
             [auth0-ring.middleware :refer [wrap-token-verification]]))
 
 ;; Load the configuration file with the Auth0 account info
