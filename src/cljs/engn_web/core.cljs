@@ -105,12 +105,12 @@
 ;; ==========================================================================
 
 (defn assign-new-pseudonym [user]
-  (print "assign function")
-  (print (str (rand-nth @user-pseudonym-set) (rand-int 10000)))
+  ; (print "assign function")
+  ; (print (str (rand-nth @user-pseudonym-set) (rand-int 10000)))
   (reset! user-pseudonym-map
     (assoc @user-pseudonym-map (:nickname user)
-      (str (rand-nth @user-pseudonym-set) (rand-int 10000))))
-  (print (get @user-pseudonym-map (:nickname user)))
+      (str (rand-nth @user-pseudonym-set) (rand-int 100000))))
+  ; (print (get @user-pseudonym-map (:nickname user)))
   (get @user-pseudonym-map (:nickname user)))
 
 (defn anonymize-user [user]
